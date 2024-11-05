@@ -175,3 +175,45 @@ martial_arts_grades %>%
   knitr::kable()
 ```
 
+
+## Question 10
+
+Compute from the previous data frame the distribution of the number of grades, that is for each number of grades (e.g. 10) the number of students who have exactly this number of grades in Martial Arts and Self-Defense. Represent graphically the results.
+
+
+```{r}
+grade_distribution <- martial_arts_grades %>%
+  count(num_grades)
+
+grade_distribution %>%
+  knitr::kable()
+
+ggplot(grade_distribution, aes(x = factor(num_grades), y = n)) +
+  geom_col(fill = "skyblue") +
+  labs(
+    title = "Distribution of Number of Grades in Martial Arts and Self-Defense",
+    x = "Number of Grades",
+    y = "Number of Students"
+  ) +
+  theme_minimal()
+```
+## Question 11
+
+Using a graphical representation to study whether the number of grades per student in Martial Arts and Self-Defense depends on the group.
+
+### 
+```{r}
+grades_group_distribution <- martial_arts_grades %>%
+  count(group, num_grades)
+
+ggplot(grades_group_distribution, aes(x = group, y = n, fill = factor(num_grades))) +
+  geom_col() +
+  labs(
+    title = "Number of Students by Number of Grades and Group",
+    x = "Group",
+    y = "Number of Students",
+    fill = "Number of Grades"
+  ) +
+  theme_minimal()
+```
+
