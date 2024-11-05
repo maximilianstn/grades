@@ -340,3 +340,60 @@ ggplot(avg_grades_group, aes(x = `Shamanism and Spirit Communication`, y = `Trib
   )
 ```
 
+## Question 16
+
+Let us assume that the final grade of a student is the average of the averages of their grades for each course. Create a data frame with three columns, id, group and final grade based on this definition for the last column. Sort the data frame in decrease order of final grade and include in the quarto rendering its first five rows.
+
+```{r}
+# average grade per student per course
+student_course_averages <- grades_data %>%
+  group_by(id, group, course) %>%
+  summarise(
+    avg_course_grade = mean(grade, na.rm = TRUE),
+    .groups = 'drop'
+  )
+
+# final grade for each student as average of their course averages
+final_grades <- student_course_averages %>%
+  group_by(id, group) %>%
+  summarise(
+    final_grade = mean(avg_course_grade, na.rm = TRUE),
+    .groups = 'drop'
+  )
+
+# sort the data frame in decreasing order of final_grade
+final_grades_sorted <- final_grades %>%
+  arrange(desc(final_grade))
+
+# include the first five rows in the quarto rendering
+final_grades_sorted %>%
+  slice_head(n = 5) %>%
+  knitr::kable(
+    caption = "Top 5 Students Sorted by Final Grade"
+  )
+```
+
+## Question 17
+
+Find a way to study differences in final grades between groups.
+
+```{r}
+# summary statistics per group
+final_grades_summary <- final_grades %>%
+  group_by(group) %>%
+  summarise(
+    count = n(),
+    Mean = mean(final_grade, na.rm = TRUE),
+    Minimum = min(final_grade, na.rm = TRUE),
+    Maximum = max(final_grade, na.rm = TRUE),
+    .groups = 'drop'
+  ) %>%
+  arrange(group)
+
+# Display the summary statistics
+final_grades_summary %>%
+  knitr::kable(
+    caption = "Summary Statistics of Final Grades by Group (Sorted Descending from 16 to 1)"
+  )
+```
+
