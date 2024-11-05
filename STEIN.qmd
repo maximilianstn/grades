@@ -24,7 +24,19 @@ library(stringr)
 library(here)
 ```
 
+## Question 1
+
+Load the data.
+
 ```{r}
-exam_data <- read.csv(here("data", ".csv"))
+grades_data <- read.csv(here("grades.csv"))
+```
+
+## Question 2
+
+Give the number of grades in the data set directly in the text of your quarto file, in a sentence of the form “The data set contains xxx grades.” where xxx is replaced by the number of grades. This must be computed from the data set.
+
+```{r}
+cat("The data set contains", nrow(grades_data), "grades.")
 ```
 
