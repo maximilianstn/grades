@@ -81,7 +81,7 @@ students %>%
   theme_minimal()
 ```
 
-# Question 6 
+## Question 6 
 
 Compute the average of all the grades in Hunting and Gathering Skills in each group and display graphically this average as a function of the group. It is recommend to use geom_col() for this task.
 
@@ -98,5 +98,34 @@ ggplot(avg_grades, aes(x = group, y = avg_grade, fill = group)) +
        x = "Group",
        y = "Average Grade") +
   theme_minimal() 
+```
+
+## Question 7 
+
+Compare graphically the distribution of the grades of the 3 modules.
+
+### First Visualisation Option - Boxplot Distribution
+```{r}
+ggplot(grades_data, aes(x = factor(module), y = grade)) +
+  geom_boxplot(fill = "lightblue") +
+  labs(
+    title = "Distribution of Grades by Module",
+    x = "Module",
+    y = "Grade"
+  ) +
+  theme_minimal()
+```
+
+### Second Visualisation Option - Density Distribution
+```{r}
+ggplot(grades_data, aes(x = grade, fill = factor(module))) +
+  geom_density(alpha = 0.5) +
+  labs(
+    title = "Density Distribution of Grades by Module",
+    x = "Grade",
+    y = "Density",
+    fill = "Module"
+  ) +
+  theme_minimal()
 ```
 
