@@ -160,3 +160,18 @@ grades_summary %>%
   knitr::kable()
 ```
 
+## Question 9 
+
+Create a data frame that gives for each student their id, their group and the number of grades they obtained in Martial Arts and Self-Defense and include in the quarto rendering a small extract of the result.
+
+```{r}
+martial_arts_grades <- grades_data %>%
+  filter(course == "Martial Arts and Self-Defense") %>%
+  group_by(id, group) %>%
+  summarise(num_grades = n(), .groups = 'drop', course)
+
+martial_arts_grades %>%
+  slice_head(n = 5) %>%
+  knitr::kable()
+```
+
