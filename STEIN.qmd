@@ -465,3 +465,52 @@ pass_data %>%
   )
 ```
 
+## Question 19
+
+```{r}
+# students who do not pass but have a final grade >= 10
+students_not_pass_final_grade_10 <- pass_data %>%
+  filter(pass == FALSE, final_grade >= 10)
+
+# Compute the number of such students
+num_students <- nrow(students_not_pass_final_grade_10)
+
+# Display the number
+cat("Number of students who do not pass but have a final grade >= 10:", num_students)
+```
+
+## Question 20
+
+```{r}
+# number of students who passed in each group
+pass_rate_per_group <- pass_data %>%
+  group_by(group) %>%
+  summarise(
+    total_students = n(),
+    students_passed = sum(pass),
+    pass_rate = (students_passed / total_students) * 100,  # Pass rate as a percentage
+    .groups = 'drop'
+  )
+
+# Display the pass rate per group
+pass_rate_per_group %>%
+  arrange(desc(pass_rate)) %>%
+  knitr::kable(
+    caption = "Pass Rate per Group"
+  )
+```
+### Graphical representation
+```{r}
+# Graphical representation
+ggplot(pass_rate_per_group, aes(x = reorder(group, -pass_rate), y = pass_rate, fill = group)) +
+  geom_col() +
+  labs(
+    title = "Pass Rate per Group",
+    x = "Group",
+    y = "Pass Rate (%)"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "none"
+  )
+```
