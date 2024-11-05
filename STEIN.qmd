@@ -1,0 +1,30 @@
+---
+title: "Stein"
+author: "Maximilian Stein"
+date: "`r Sys.Date()`"
+format:
+  html: default
+  pdf:
+    documentclass: article
+    keep-tex: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+# Introduction 
+
+This document contains solutions for the exam, making use of the `dplyr`, `tidyr` and `stringr` libraries.
+
+```{r setup, include=FALSE}
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(here)
+```
+
+```{r}
+exam_data <- read.csv(here("data", ".csv"))
+```
+
