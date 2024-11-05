@@ -22,6 +22,7 @@ library(dplyr)
 library(tidyr)
 library(stringr)
 library(here)
+library(ggplot2)
 ```
 
 ## Question 1
@@ -59,8 +60,7 @@ Create a students data frame that contains one row per student and two variables
 ```{r}
 # 'students' data frame with one row per student
 students <- grades_data %>%
-  distinct(student_id, group) %>%
-  rename(id = student_id)
+  distinct(id, group)
 
 # short extract of the 'students' data frame
 students %>%
