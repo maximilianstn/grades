@@ -397,3 +397,71 @@ final_grades_summary %>%
   )
 ```
 
+## Question 18
+
+To pass the year, a student must fulfil the following conditions:
+1. have no average grade in a course lower than 5;
+2. have an average grade in each module larger or equal to 10 (the average in a module is
+simply the average of the average grades of the courses in the module).
+
+Create a data frame that gives for each student their id, their group, their final grade (as defined before) and a pass variable equal to TRUE if the student pass the year (and FALSE if they do not).
+
+```{r}
+# average grade per student per course
+student_course_averages <- grades_data %>%
+  group_by(id, group, module, course) %>%
+  summarise(
+    avg_course_grade = mean(grade, na.rm = TRUE),
+    .groups = 'drop'
+  )
+
+# average course grade is less than 5 for each student
+student_course_min <- student_course_averages %>%
+  group_by(id, group) %>%
+  summarise(
+    min_course_grade = min(avg_course_grade),
+    .groups = 'drop'
+  ) %>%
+  mutate(no_course_grade_below_5 = min_course_grade >= 5)
+
+# average module grades for each student
+student_module_averages <- student_course_averages %>%
+  group_by(id, group, module) %>%
+  summarise(
+    avg_module_grade = mean(avg_course_grade),
+    .groups = 'drop'
+  )
+
+# any module average is less than 10 for each student
+student_module_min <- student_module_averages %>%
+  group_by(id, group) %>%
+  summarise(
+    min_module_grade = min(avg_module_grade),
+    .groups = 'drop'
+  ) %>%
+  mutate(all_module_grades_at_least_10 = min_module_grade >= 10)
+
+# final grade
+final_grades <- student_course_averages %>%
+  group_by(id, group) %>%
+  summarise(
+    final_grade = mean(avg_course_grade),
+    .groups = 'drop'
+  )
+
+# final check for pass status
+pass_data <- final_grades %>%
+  left_join(student_course_min %>% select(id, no_course_grade_below_5), by = "id") %>%
+  left_join(student_module_min %>% select(id, all_module_grades_at_least_10), by = "id") %>%
+  mutate(pass = no_course_grade_below_5 & all_module_grades_at_least_10) %>%
+  select(id, group, final_grade, pass)
+
+# display data excerpt
+pass_data %>%
+  arrange(desc(final_grade)) %>%
+  slice_head(n = 5) %>%  # Display first five rows
+  knitr::kable(
+    caption = "Students' Final Grades and Pass Status"
+  )
+```
+
