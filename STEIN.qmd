@@ -224,6 +224,8 @@ ggplot(martial_arts_grades, aes(x = "", y = num_grades)) +
 
 ## Question 12
 
+Create a data frame that gives for each student their id, their group and the average of grades they obtained in each course. Using an adapted pivoting method, create a new data frame with one row per student and 12 columns: one for the id, one for the group and one per course. Include in the quarto rendering a small extract of the data frame with the id and group columns and with two of the course columns. 
+
 ```{r}
 # average grade per student per course
 student_course_avg <- grades_data %>%
@@ -240,4 +242,68 @@ student_avg_grades %>%
   slice_head(n = 5) %>%
   knitr::kable()
 ```
+
+## Question 13
+
+Show the average grades in Herbalism and Traditional Medicine as a function of the average grades in Animal Lore and Totemism. Make sure to maximise the readability of the proposed representation.
+
+```{r}
+avg_grades_courses <- grades_data %>%
+  filter(course %in% c("Herbalism and Traditional Medicine", "Animal Lore and Totemism")) %>%
+  group_by(id) %>%
+  summarise(
+    avg_grade_herbalism = mean(grade[course == "Herbalism and Traditional Medicine"], na.rm = TRUE),
+    avg_grade_animal_lore = mean(grade[course == "Animal Lore and Totemism"], na.rm = TRUE),
+    .groups = 'drop'
+  ) %>%
+  drop_na()
+
+# average grades in Herbalism and Traditional Medicine vs. Animal Lore and Totemism
+ggplot(avg_grades_courses, aes(x = avg_grade_animal_lore, y = avg_grade_herbalism)) +
+  geom_point(color = "darkblue", alpha = 0.7) +
+  geom_smooth(method = "lm", se = TRUE, color = "red", linetype = "dashed") +
+  labs(
+    title = "Average Grades: Herbalism and Traditional Medicine vs. Animal Lore and Totemism",
+    x = "Average Grade in Animal Lore and Totemism",
+    y = "Average Grade in Herbalism and Traditional Medicine"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    axis.text = element_text(color = "black"),
+    axis.title = element_text(face = "bold")
+  )
+```
+## Question 14
+
+The cor() function computes the correlation coeﬀicient between two vectors. It can be used as a summary function in dplyr. Using it, compute the correlation between the average grades in Tribal Law and Customs and the average grades in Shamanism and Spirit Communication group by group.
+
+```{r}
+# average grades per student for the two courses
+avg_grades_courses <- grades_data %>%
+  filter(course %in% c("Tribal Law and Customs", "Shamanism and Spirit Communication")) %>%
+  group_by(id, group, course) %>%
+  summarise(avg_grade = mean(grade, na.rm = TRUE), .groups = 'drop')
+
+# average grades in both courses
+avg_grades_wide <- avg_grades_courses %>%
+  pivot_wider(
+    names_from = course,
+    values_from = avg_grade
+  )
+
+# correlation between the average grades in the two courses, grouped by group
+correlations <- avg_grades_wide %>%
+  group_by(group) %>%
+  summarise(
+    correlation = cor(`Tribal Law and Customs`, `Shamanism and Spirit Communication`, use = "complete.obs")
+  )
+
+# Displayed computation
+correlations %>%
+  knitr::kable(
+    caption = "Correlation between average grades in Tribal Law and Customs and Shamanism and Spirit Communication by Group"
+  )
+```
+
 
