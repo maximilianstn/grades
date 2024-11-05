@@ -68,3 +68,14 @@ students %>%
   knitr::kable()
 ```
 
+## Question 5 
+
+```{r}
+students %>%
+  count(group) %>%
+  ggplot(aes(x = group, y = n, fill = group)) +
+  geom_col() +
+  labs(title = "Number of Students per Group", x = "Group", y = "Number of Students") +
+  theme_minimal()
+```
+
