@@ -40,3 +40,11 @@ Give the number of grades in the data set directly in the text of your quarto fi
 cat("The data set contains", nrow(grades_data), "grades.")
 ```
 
+## Question 3 
+
+Use distinct() compute the number of students on the data set and report the value directly in the text as in the previous question.
+
+```{r}
+
+```
+
