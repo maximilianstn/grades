@@ -201,19 +201,43 @@ ggplot(grade_distribution, aes(x = factor(num_grades), y = n)) +
 
 Using a graphical representation to study whether the number of grades per student in Martial Arts and Self-Defense depends on the group.
 
-### 
 ```{r}
-grades_group_distribution <- martial_arts_grades %>%
-  count(group, num_grades)
+martial_arts_grades <- grades_data %>%
+  filter(course == "Martial Arts and Self-Defense") %>%
+  group_by(id, group) %>%
+  summarise(num_grades = n(), .groups = 'drop')
 
-ggplot(grades_group_distribution, aes(x = group, y = n, fill = factor(num_grades))) +
-  geom_col() +
+ggplot(martial_arts_grades, aes(x = "", y = num_grades)) +
+  geom_violin(trim = FALSE, fill = "skyblue", alpha = 0.7) +
   labs(
-    title = "Number of Students by Number of Grades and Group",
-    x = "Group",
-    y = "Number of Students",
-    fill = "Number of Grades"
+    title = "Distribution of Number of Grades per Student in Martial Arts and Self-Defense by Group",
+    x = "Number of Grades per Student",
+    y = "Density"
   ) +
-  theme_minimal()
+  theme_minimal() +
+  facet_wrap(~ group, ncol = 4) +
+  theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
+```
+
+
+# 4. Grade Analysis
+
+## Question 12
+
+```{r}
+# average grade per student per course
+student_course_avg <- grades_data %>%
+  group_by(id, group, course) %>%
+  summarise(avg_grade = mean(grade, na.rm = TRUE), .groups = 'drop')
+
+# one row per student and columns for each course
+student_avg_grades <- student_course_avg %>%
+  pivot_wider(names_from = course, values_from = avg_grade)
+
+# small extract of the data frame with id, group, and two course columns
+student_avg_grades %>%
+  select(id, group, `Hunting and Gathering Skills`, `Martial Arts and Self-Defense`) %>%
+  slice_head(n = 5) %>%
+  knitr::kable()
 ```
 
