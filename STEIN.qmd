@@ -52,3 +52,19 @@ num_students <- grades_data %>%
 cat("There are", num_students, "students in the data set.")
 ```
 
+## Question 4
+
+Create a students data frame that contains one row per student and two variables, id and group that gives the assignment of each student to their group. Make sure that each student appears on only once in the data frame. Include a short extract of the data frame in the quarto rendering.
+
+```{r}
+# 'students' data frame with one row per student
+students <- grades_data %>%
+  distinct(student_id, group) %>%
+  rename(id = student_id)
+
+# short extract of the 'students' data frame
+students %>%
+  slice_head(n = 5) %>%
+  knitr::kable()
+```
+
