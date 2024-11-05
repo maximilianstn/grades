@@ -306,4 +306,37 @@ correlations %>%
   )
 ```
 
+## Question 15
+
+Display the average grades in Tribal Law and Customs as a function the average grades in Shamanism and Spirit Communication for the students of the group in which those grades are the most correlated (positively or negatively).
+
+```{r}
+# Highest absolute correlation identification
+max_corr_group <- correlations %>%
+  mutate(abs_correlation = abs(correlation)) %>%
+  arrange(desc(abs_correlation)) %>%
+  slice(1) %>%
+  pull(group)
+
+cat("The group with the highest absolute correlation:", max_corr_group, "\n")
+
+avg_grades_group <- avg_grades_wide %>%
+  filter(group == max_corr_group)
+
+# average grades in Tribal Law and Customs as a function of the average grades in Shamanism and Spirit Communication for the selected group
+ggplot(avg_grades_group, aes(x = `Shamanism and Spirit Communication`, y = `Tribal Law and Customs`)) +
+  geom_point(color = "darkblue", alpha = 0.7) +
+  geom_smooth(method = "lm", se = TRUE, color = "red", linetype = "dashed") +
+  labs(
+    title = paste("Average Grades in Tribal Law and Customs vs. Shamanism and Spirit Communication for Group", max_corr_group),
+    x = "Average Grade in Shamanism and Spirit Communication",
+    y = "Average Grade in Tribal Law and Customs"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    axis.text = element_text(color = "black"),
+    axis.title = element_text(face = "bold")
+  )
+```
 
