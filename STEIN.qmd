@@ -45,6 +45,10 @@ cat("The data set contains", nrow(grades_data), "grades.")
 Use distinct() compute the number of students on the data set and report the value directly in the text as in the previous question.
 
 ```{r}
+num_students <- grades_data %>%
+  distinct(id) %>%
+  nrow()
 
+cat("There are", num_students, "students in the data set.")
 ```
 
