@@ -13,7 +13,7 @@ execute:
   message: false
 ---
 
-# Introduction 
+# 1. Introduction 
 
 This document contains solutions for the exam, making use of the `dplyr`, `tidyr` and `stringr` libraries.
 
@@ -32,6 +32,8 @@ Load the data.
 ```{r}
 grades_data <- read.csv(here("grades.csv"))
 ```
+
+# 2. Simple Analysis 
 
 ## Question 2
 
@@ -127,5 +129,34 @@ ggplot(grades_data, aes(x = grade, fill = factor(module))) +
     fill = "Module"
   ) +
   theme_minimal()
+```
+# 3. Attendance Analysis
+
+## Question 8
+
+Compute the number of grades per student and include in your quarto rendering an extract of the resulting data frame. Make sure to keep in the data frame the id of the students but also their group. Include in the text a markdown table with the minimum, maximum, average and median number of grades per student.
+
+```{r}
+grades_per_student <- grades_data %>%
+  group_by(id, group) %>%
+  summarise(num_grades = n(), .groups = 'drop')
+
+# Extract of the resulting data frame
+grades_per_student %>%
+  slice_head(n = 5) %>%
+  knitr::kable()
+
+# Summary statistics
+grades_summary <- grades_per_student %>%
+  summarise(
+    Minimum = min(num_grades),
+    Maximum = max(num_grades),
+    Average = mean(num_grades),
+    Median = median(num_grades)
+  )
+
+# Mrkdown Table
+grades_summary %>%
+  knitr::kable()
 ```
 
