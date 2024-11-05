@@ -70,12 +70,33 @@ students %>%
 
 ## Question 5 
 
+Use a graphical representation to display the number of students per group.
+
 ```{r}
 students %>%
   count(group) %>%
   ggplot(aes(x = group, y = n, fill = group)) +
-  geom_col() +
+  geom_col(fill = "darkblue") +
   labs(title = "Number of Students per Group", x = "Group", y = "Number of Students") +
   theme_minimal()
+```
+
+# Question 6 
+
+Compute the average of all the grades in Hunting and Gathering Skills in each group and display graphically this average as a function of the group. It is recommend to use geom_col() for this task.
+
+```{r}
+avg_grades <- grades_data %>%
+  filter(course == "Hunting and Gathering Skills") %>%
+  group_by(group) %>%
+  summarise(avg_grade = mean(grade, na.rm = TRUE))
+
+# Plotting of average grades
+ggplot(avg_grades, aes(x = group, y = avg_grade, fill = group)) +
+  geom_col(fill = "darkblue") +
+  labs(title = "Average Grades in Hunting and Gathering Skills by Group",
+       x = "Group",
+       y = "Average Grade") +
+  theme_minimal() 
 ```
 
