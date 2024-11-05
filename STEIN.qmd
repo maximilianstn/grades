@@ -481,6 +481,8 @@ cat("Number of students who do not pass but have a final grade >= 10:", num_stud
 
 ## Question 20
 
+Compute the pass rate per group and represent it graphically.
+
 ```{r}
 # number of students who passed in each group
 pass_rate_per_group <- pass_data %>%
